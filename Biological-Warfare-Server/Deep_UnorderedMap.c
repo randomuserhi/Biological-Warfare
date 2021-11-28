@@ -115,34 +115,33 @@ int Deep_UnorderedMap_ByteCompare(const void* hashKey, const void* key, size_t k
 
 int Deep_UnorderedMap_DynArrayCompare(const void* hashKey, const void* key, size_t keyTypeSize)
 {
-	const struct Deep_DynArray(raw)* hashKeyArr = hashKey;
-	const struct Deep_DynArray(raw)* keyArr = key;
-
-	if (hashKeyArr->size == keyArr->size && hashKeyArr->typeSize == keyArr->typeSize)
+	if (hashKey && key)
 	{
-		for (size_t i = 0; i < hashKeyArr->size; ++i)
+		const struct Deep_DynArray(raw)* hashKeyArr = hashKey;
+		const struct Deep_DynArray(raw)* keyArr = key;
+
+		if (hashKeyArr->size == keyArr->size && hashKeyArr->typeSize == keyArr->typeSize)
 		{
-			if (memcmp(Deep_DynArray_Get(raw)(hashKeyArr, i), Deep_DynArray_Get(raw)(keyArr, i), hashKeyArr->typeSize) != 0)
-			{
-				return 0;
-			}
+			return (memcmp(hashKeyArr->values, keyArr->values, hashKeyArr->size * hashKeyArr->typeSize) == 0);
 		}
-		return 1;
 	}
-	else return 0;
+	return DEEP_FALSE;
 }
 
 extern Deep_Inline void Deep_UnorderedMap_raw_To_raw_Create(struct Deep_UnorderedMap_raw_To_raw* unorderedMap, int (*keyCompareFunc)(const void*, const void*, size_t), size_t keyTypeSize, size_t keyTypeAlignment, size_t valueTypeSize, size_t valueTypeAlignment);
 
 void Deep_UnorderedMap_raw_To_raw_Free(struct Deep_UnorderedMap_raw_To_raw* unorderedMap)
 {
-	for (struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->start; hashSlot != NULL;)
+	if (unorderedMap)
 	{
-		struct Deep_UnorderedMap_HashSlot* Old = hashSlot;
-		hashSlot = hashSlot->next;
-		free(Old);
+		for (struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->start; hashSlot != NULL;)
+		{
+			struct Deep_UnorderedMap_HashSlot* Old = hashSlot;
+			hashSlot = hashSlot->next;
+			free(Old);
+		}
+		free(unorderedMap->hashes);
 	}
-	free(unorderedMap->hashes);
 }
 
 void Deep_UnorderedMap_raw_To_raw_ReHash(struct Deep_UnorderedMap_raw_To_raw* unorderedMap)
@@ -166,7 +165,7 @@ void Deep_UnorderedMap_raw_To_raw_ReHash(struct Deep_UnorderedMap_raw_To_raw* un
 				else
 				{
 					struct Deep_UnorderedMap_HashSlot* tmp = unorderedMap->hashes[index];
-					while (tmp->_next != NULL)
+					while (tmp->_next)
 					{
 						tmp = tmp->_next;
 					}
@@ -185,10 +184,10 @@ void* Deep_UnorderedMap_raw_To_raw_Insert(struct Deep_UnorderedMap_raw_To_raw* u
 	const size_t index = hash % unorderedMap->bucketSize;
 	if (unorderedMap->hashes[index] == NULL)
 	{
-		void* tmp = malloc(unorderedMap->valueOffset + unorderedMap->valueTypeSize);
+		unsigned char* tmp = malloc(unorderedMap->valueOffset + unorderedMap->valueTypeSize);
 		if (tmp)
 		{
-			unorderedMap->hashes[index] = tmp;
+			unorderedMap->hashes[index] = (void*)tmp;
 			unorderedMap->hashes[index]->hash = hash;
 			unorderedMap->hashes[index]->_next = NULL;
 			unorderedMap->hashes[index]->next = NULL;
@@ -203,9 +202,9 @@ void* Deep_UnorderedMap_raw_To_raw_Insert(struct Deep_UnorderedMap_raw_To_raw* u
 				unorderedMap->start = unorderedMap->hashes[index];
 			
 			//Set key
-			memcpy((unsigned char*)unorderedMap->hashes[index] + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize);
+			memcpy(tmp + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize);
 
-			return (unsigned char*)unorderedMap->hashes[index] + unorderedMap->valueOffset;
+			return tmp + unorderedMap->valueOffset;
 		}
 		else
 		{
@@ -215,40 +214,36 @@ void* Deep_UnorderedMap_raw_To_raw_Insert(struct Deep_UnorderedMap_raw_To_raw* u
 	else
 	{
 		struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
-		while (1)
+		struct Deep_UnorderedMap_HashSlot* prevSlot = NULL;
+		while (hashSlot)
 		{
 			if (unorderedMap->keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
 			{
 				return (unsigned char*)hashSlot + unorderedMap->valueOffset;
 			}
 
-			if (hashSlot->_next)
-				hashSlot = hashSlot->_next;
-			else
-				break;
+			prevSlot = hashSlot;
+			hashSlot = hashSlot->_next;
 		}
-		const unsigned char* tmp = malloc(unorderedMap->valueOffset + unorderedMap->valueTypeSize);
+		unsigned char* tmp = malloc(unorderedMap->valueOffset + unorderedMap->valueTypeSize);
 		if (tmp)
 		{
-			hashSlot->_next = (void*)tmp;
-			hashSlot->_next->hash = hash;
-			hashSlot->_next->next = NULL;
-			hashSlot->_next->_next = NULL;
-			hashSlot->_next->prev = unorderedMap->end;
+			prevSlot->_next = (void*)tmp;
+			prevSlot->_next->hash = hash;
+			prevSlot->_next->next = NULL;
+			prevSlot->_next->_next = NULL;
+			prevSlot->_next->prev = unorderedMap->end;
 			unorderedMap->size++;
 			if (unorderedMap->end != NULL)
-				unorderedMap->end->next = hashSlot->_next;
-			unorderedMap->end = hashSlot->_next;
+				unorderedMap->end->next = prevSlot->_next;
+			unorderedMap->end = prevSlot->_next;
 
 			//Set key
-			memcpy((unsigned char*)hashSlot->_next + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize);
+			memcpy(tmp + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize);
 
-			return (unsigned char*)hashSlot->_next + unorderedMap->valueOffset;
+			return tmp + unorderedMap->valueOffset;
 		}
-		else
-		{
-			return NULL;
-		}
+		return NULL;
 	}
 }
 
@@ -258,17 +253,14 @@ void* Deep_UnorderedMap_raw_To_raw_Find(struct Deep_UnorderedMap_raw_To_raw* uno
 	if (unorderedMap->hashes[index] != NULL)
 	{
 		struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
-		while (1)
+		while (hashSlot)
 		{
 			if (unorderedMap->keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
 			{
 				return (unsigned char*)hashSlot + unorderedMap->valueOffset;
 			}
 
-			if (hashSlot->_next)
-				hashSlot = hashSlot->_next;
-			else
-				break;
+			hashSlot = hashSlot->_next;
 		}
 	}
 	return NULL;
@@ -281,7 +273,7 @@ void Deep_UnorderedMap_raw_To_raw_Erase(struct Deep_UnorderedMap_raw_To_raw* uno
 	{
 		struct Deep_UnorderedMap_HashSlot* hashSlot = unorderedMap->hashes[index];
 		struct Deep_UnorderedMap_HashSlot* prevhashSlot = NULL;
-		while (1)
+		while (hashSlot)
 		{
 			if (unorderedMap->keyCompareFunc((unsigned char*)hashSlot + unorderedMap->keyOffset, key, unorderedMap->keyTypeSize))
 			{
@@ -292,23 +284,28 @@ void Deep_UnorderedMap_raw_To_raw_Erase(struct Deep_UnorderedMap_raw_To_raw* uno
 
 				if (hashSlot->prev)
 					hashSlot->prev->next = hashSlot->next;
+				else // If prev is null, then we are altering first element and the start of linked list needs to be reset
+				{
+					unorderedMap->start = hashSlot->next;
+					if (hashSlot->next)
+						hashSlot->next->prev = NULL;
+				}
 				if (hashSlot->next)
 					hashSlot->next->prev = hashSlot->prev;
 				else // If next is null, then we are altering last element and the end of linked list needs to be reset
+				{
 					unorderedMap->end = hashSlot->prev;
+					if (hashSlot->prev)
+						hashSlot->prev->next = NULL;
+				}
 
 				free(hashSlot);
 				unorderedMap->size--;
 				break;
 			}
 
-			if (hashSlot->_next)
-			{
-				prevhashSlot = hashSlot;
-				hashSlot = hashSlot->_next;
-			}
-			else
-				break;
+			prevhashSlot = hashSlot;
+			hashSlot = hashSlot->_next;
 		}
 	}
 }

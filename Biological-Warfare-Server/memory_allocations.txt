@@ -1,0 +1,2 @@
+malloc => D:\Git\Biological-Warfare\Biological-Warfare-Server\Deep_Network_Windows_Server.c > Deep_Network_Server_Start : line(12) ( 0000024A38726A60[2048] )
+free => D:\Git\Biological-Warfare\Biological-Warfare-Server\Deep_Network_Windows_Server.c > Deep_Network_Server_Close : line(19) ( 0000024A38726A60 )

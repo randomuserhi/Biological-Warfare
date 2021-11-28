@@ -16,9 +16,6 @@
     <Filter Include="Header Files\Deep">
       <UniqueIdentifier>{ed078eae-8a8d-499e-b772-2e366c7570f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Deep\Engine">
-      <UniqueIdentifier>{daaf5e35-6ccd-432e-aad0-e075999f5d8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Deep\Network">
       <UniqueIdentifier>{7ee7dbe2-d66d-4441-b08b-10cffdb433c3}</UniqueIdentifier>
     </Filter>
@@ -37,21 +34,30 @@
     <Filter Include="Header Files\Deep\Containers">
       <UniqueIdentifier>{2a9abb10-4f3a-4f57-9b13-9ffb87218ccd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Deep\Engine\Math">
-      <UniqueIdentifier>{282d09cf-27dd-4423-8eaa-d3fa8f549fd6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Deep\Containers">
       <UniqueIdentifier>{5d902b70-50b3-4dd9-8d3f-00c3f75b22f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Deep\Network\Deep_Network_OS">
+      <UniqueIdentifier>{cb5ee2b7-d5a6-4e63-b4d8-dc2b16aa42c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Network\Deep_Network_OS">
+      <UniqueIdentifier>{7094e367-a1ed-420e-a14d-64f4a057931b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Debug">
+      <UniqueIdentifier>{b152dd33-21bb-4b9c-a6d5-71d1e21446c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\Debug">
+      <UniqueIdentifier>{851be91d-ab6a-4bae-88e0-c419967aaae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\Engine">
+      <UniqueIdentifier>{15ffe5e3-cf31-44d5-820f-b88fafe594f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\Engine\Math">
+      <UniqueIdentifier>{07c982a2-767c-4230-97c6-e8be596bf545}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Deep_Network_Server.c">
-      <Filter>Source Files\Deep\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Deep_Network_Socket.c">
-      <Filter>Source Files\Deep\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Biological_Warfare_Server.c">
+    <ClCompile Include="Biological-Warfare-Server.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Deep_DynArray.c">
@@ -69,13 +75,19 @@
     <ClCompile Include="Deep_String.c">
       <Filter>Source Files\Deep</Filter>
     </ClCompile>
+    <ClCompile Include="Deep_Network_Window_Socket.c">
+      <Filter>Source Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep_Network_Windows_Server.c">
+      <Filter>Source Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep_Debug_Memory.c">
+      <Filter>Source Files\Deep\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep.h">
       <Filter>Header Files\Deep</Filter>
-    </ClInclude>
-    <ClInclude Include="Deep_Engine.h">
-      <Filter>Header Files\Deep\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Deep_Network.h">
       <Filter>Header Files\Deep\Network</Filter>
@@ -86,17 +98,35 @@
     <ClInclude Include="Deep_UnorderedMap.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Deep_Math.h">
-      <Filter>Header Files\Deep\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Deep_Vector.h">
-      <Filter>Header Files\Deep\Engine\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Deep_Containers.h">
       <Filter>Header Files\Deep\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Deep_String.h">
       <Filter>Header Files\Deep</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Network_Windows.h">
+      <Filter>Header Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Network_Posix.h">
+      <Filter>Header Files\Deep\Network\Deep_Network_OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Modules.h">
+      <Filter>Header Files\Deep</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug.h">
+      <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug_Memory.h">
+      <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Engine.h">
+      <Filter>Header Files\Deep\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Math.h">
+      <Filter>Header Files\Deep\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Vector.h">
+      <Filter>Header Files\Deep\Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

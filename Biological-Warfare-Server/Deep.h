@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include "Deep_Modules.h"
 
 /*
 * Compiler Macros
@@ -78,11 +79,17 @@
 * Deep Utilities
 */
 
+#include "Deep_Debug.h"
+
 #if defined(Deep_Compiler_Clang)
 #define Deep_Inline inline
 #define Deep_AlignOf(type) __alignof__(type)
 
 #define Deep_Unreachable __builtin_unreachable()
+
+#define Deep__Function__ __func__
+#define Deep__File__ __FILE__
+#define Deep__Line__ __LINE__
 
 #elif defined(Deep_Compiler_GCC)
 #define Deep_Inline inline __attribute__((always_inline))
@@ -90,17 +97,28 @@
 
 #define Deep_Unreachable __builtin_unreachable()
 
+#define Deep__Function__ __func__
+#define Deep__File__ __FILE__
+#define Deep__Line__ __LINE__
+
 #elif defined(Deep_Compiler_MSCV)
 #define Deep_Inline inline
 #define Deep_AlignOf(type) _Alignof(type)
 
 #define Deep_Unreachable __assume(0)
 
+#define Deep__Function__ __FUNCTION__
+#define Deep__File__ __FILE__
+#define Deep__Line__ __LINE__
+
 #endif
 
 /*
 * Deep Macros
 */
+
+#define DEEP_FALSE 0
+#define DEEP_TRUE (!(DEEP_FALSE))
 
 #if INTPTR_MAX == INT64_MAX
 #define Deep_SizeOf_SizeT 8
