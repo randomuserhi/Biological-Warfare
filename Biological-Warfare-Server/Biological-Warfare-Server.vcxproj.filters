@@ -55,9 +55,12 @@
     <Filter Include="Header Files\Deep\Engine\Math">
       <UniqueIdentifier>{07c982a2-767c-4230-97c6-e8be596bf545}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{c53a350b-d54a-4228-9c87-34fcb7278896}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Biological-Warfare-Server.c">
+    <ClCompile Include="Biological_Warfare_Server.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Deep_DynArray.c">
@@ -75,7 +78,7 @@
     <ClCompile Include="Deep_String.c">
       <Filter>Source Files\Deep</Filter>
     </ClCompile>
-    <ClCompile Include="Deep_Network_Window_Socket.c">
+    <ClCompile Include="Deep_Network_Windows_Socket.c">
       <Filter>Source Files\Deep\Network\Deep_Network_OS</Filter>
     </ClCompile>
     <ClCompile Include="Deep_Network_Windows_Server.c">

@@ -194,11 +194,11 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Deep_Network_Window_Socket.c">
+    <ClCompile Include="Deep_Network_Windows_Socket.c">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Biological-Warfare-Server.c" />
+    <ClCompile Include="Biological_Warfare_Server.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deep_Containers.h" />
